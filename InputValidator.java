@@ -5,8 +5,6 @@ public class InputValidator
     private static final Scanner scanner = new Scanner(System.in);
     public static int getValidInteger(String prompt, int min, int max)
     {
-        while (true)
-        {
         System.out.print(prompt);
         String userInput = scanner.next();
         try {
@@ -21,8 +19,9 @@ public class InputValidator
         {
             System.out.println("Error: " + e.getMessage());
             System.out.println("Please try again!");
+            return getValidInteger(prompt, min, max);
         }
-        }
+        
 
     }
 

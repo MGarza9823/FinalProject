@@ -4,7 +4,8 @@ import java.io.*;
 public class InventoryManager
 {
     private ArrayList<String> availableItems = new ArrayList<>();
-    private ArrayList<String> soldOutItems = new ArrayList<>();
+    private String[] soldOutItems = new String[10];
+    private int soldOutCount = 0;
 
     public void saveData(String availableFile, String soldOutFile)
     {
@@ -23,9 +24,9 @@ public class InventoryManager
 
         try (BufferedWriter writer = new BufferedWriter (new FileWriter(soldOutFile)))
         {
-            for (String item : soldOutItems)
+            for (int i = 0; i < soldOutCount; i++)
             {
-                writer.write(item);
+                writer.write(soldOutItems[i]);
                 writer.newLine();
             }
         }
@@ -55,7 +56,10 @@ public class InventoryManager
             String line;
             while ((line = reader.readLine()) != null)
             {
-                soldOutItems.add(line);
+            if (soldOutCount < soldOutItems.length)
+            {
+                soldOutItems[soldOutCount++] = line;
+            }
             }
     
         }
@@ -81,23 +85,23 @@ public void sellItem(int index) throws IndexOutOfBoundsException
     {
         throw new IndexOutOfBoundsException("Invalid index.");
     }
-    if (soldOutItems.size() >= 10)
+    if (soldOutCount >= soldOutItems.length)
     {
         System.out.println("Sold out items list is full. Cannot sell more items.");
         return;
     }
 
-    soldOutItems.add(availableItems.remove(index));
-    System.out.println("Item sold: " + soldOutItems.get(soldOutItems.size() - 1));
+    soldOutItems[soldOutCount++] = availableItems.remove(index);
+    System.out.println("Item sold: " + soldOutItems[soldOutCount - 1]);
 }
 
 public void viewInventory()
 {
     System.out.println("Available Items: " + availableItems);
     System.out.println("Sold Out Items: ");
-    for (String item : soldOutItems)
+    for (int i = 0; i < soldOutCount; i++)
     {
-        System.out.println(item);
+        System.out.println(soldOutItems[i]);
     }
     System.out.println();
 }
